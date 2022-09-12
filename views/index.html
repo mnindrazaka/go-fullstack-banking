@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounts List</title>
+  </head>
+  <body>
+    <a href="/create">Create new account</a>
+    <br />
+    <br />
+    <table border="1">
+      <tr>
+        <th>No</th>
+        <th>Code</th>
+        <th>Balance</th>
+        <th>Action</th>
+      </tr>
+
+      {{ range $index, $account := .accounts }}
+      <tr>
+        <td>{{ sum $index 1 }}</td>
+        <td>{{ $account.Code }}</td>
+        <td>Rp. {{ $account.Balance }}</td>
+        <td>
+          <a href="/withdrawal?id={{ $account.Id }}">Withdrawal</a>
+          &nbsp;
+          <a href="/deposit?id={{ $account.Id }}">Deposit</a>
+          &nbsp;
+          <a href="/delete?id={{ $account.Id }}">Delete</a>
+        </td>
+      </tr>
+      {{ end }}
+    </table>
+  </body>
+</html>
