@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -15,7 +17,11 @@ type Account struct {
 }
 
 func main() {
-	db, err := sql.Open("mysql", "root:roottoor@/banking")
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dataSourceName := fmt.Sprintf("%s:%s@/%s", dbUsername, dbPassword, dbName)
+	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		panic(err)
 	}
