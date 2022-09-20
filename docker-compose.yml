@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  web:
+    image: golang:latest
+    command: sh -c "go mod download && go run ."
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      DB_HOST: mysql
+      DB_NAME: banking
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - go-fullstack-banking:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: banking
+
+volumes:
+  go-fullstack-banking:

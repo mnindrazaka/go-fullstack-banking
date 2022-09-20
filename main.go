@@ -19,14 +19,19 @@ type Account struct {
 func main() {
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
-	dataSourceName := fmt.Sprintf("%s:%s@/%s", dbUsername, dbPassword, dbName)
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUsername, dbPassword, dbHost, dbName)
 	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		panic(err)
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if _, err := db.Exec("CREATE TABLE IF NOT EXISTS account (`id` int NOT NULL AUTO_INCREMENT, `code` varchar(45) NOT NULL, `balance` int NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `code_UNIQUE` (`code`))"); err != nil {
+			panic(err)
+		}
+
 		rows, err := db.Query("SELECT * FROM account")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
